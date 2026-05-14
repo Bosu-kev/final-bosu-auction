@@ -46,28 +46,28 @@ export function AuctionView() {
         </header>
 
         {/* Countdown */}
-        <section
-          className={clsx(
-            'flex w-full flex-col items-center gap-3 rounded-[16px] border-2 px-4 py-8 sm:py-10',
-            ended
-              ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface-tint-1)] opacity-80'
-              : isLow
-                ? 'border-[var(--color-accent)] bg-[var(--color-surface-tint-4)] shadow-[0_18px_60px_-20px_#E51A4B88]'
-                : 'border-[var(--color-brand-orange)] bg-[var(--color-surface-tint-3)] shadow-[0_18px_60px_-20px_#FF840066]'
-          )}
-        >
-          <div
-            className="flex items-baseline gap-2 font-[family-name:var(--font-display)] font-extrabold tabular-nums sm:gap-3"
-            style={{ fontSize: 'clamp(64px, 14vw, 160px)' }}
+        <section className="flex w-full flex-col items-center gap-6">
+          <span
+            className={clsx(
+              'font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.22em] sm:text-[11px]',
+              ended
+                ? 'text-[var(--color-text-tertiary)]'
+                : isLow
+                  ? 'text-[var(--color-accent)]'
+                  : 'text-[var(--color-brand-orange)]'
+            )}
           >
-            <TimeBlock value={pad(t.h)} label="HRS" />
-            <span className="opacity-25">:</span>
-            <TimeBlock value={pad(t.m)} label="MIN" />
-            <span className="opacity-25">:</span>
-            <TimeBlock value={pad(t.s)} label="SEC" />
+            {ended ? 'Window closed' : isLow ? 'Final hour' : 'Time remaining'}
+          </span>
+
+          <div className="grid w-full grid-cols-3 gap-3 sm:gap-4">
+            <TimeTile value={pad(t.h)} label="Hours" tone={ended ? 'ended' : isLow ? 'low' : 'normal'} />
+            <TimeTile value={pad(t.m)} label="Minutes" tone={ended ? 'ended' : isLow ? 'low' : 'normal'} />
+            <TimeTile value={pad(t.s)} label="Seconds" tone={ended ? 'ended' : isLow ? 'low' : 'normal'} />
           </div>
+
           <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
-            {ended ? 'Window closed' : 'until offers close'}
+            Ends {new Date(AUCTION_OFFER_END_ISO).toUTCString()}
           </p>
         </section>
 
@@ -87,14 +87,46 @@ export function AuctionView() {
   );
 }
 
-function TimeBlock({ value, label }: { value: string; label: string }) {
+function TimeTile({
+  value,
+  label,
+  tone,
+}: {
+  value: string;
+  label: string;
+  tone: 'normal' | 'low' | 'ended';
+}) {
+  const ring =
+    tone === 'ended'
+      ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface-tint-1)]'
+      : tone === 'low'
+        ? 'border-[var(--color-accent)] bg-[var(--color-surface-tint-4)]'
+        : 'border-[var(--color-brand-orange)] bg-[var(--color-surface-tint-3)]';
+  const numberColor =
+    tone === 'ended'
+      ? 'text-[var(--color-text-secondary)]'
+      : 'text-[var(--color-text-primary)]';
+
   return (
-    <span className="inline-flex flex-col items-center leading-none">
-      <span>{value}</span>
-      <span className="mt-2 font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] sm:text-[10px]">
+    <div
+      className={clsx(
+        'flex flex-col items-center justify-center gap-3 rounded-[16px] border-2 px-2 py-8 sm:py-10',
+        ring
+      )}
+    >
+      <span
+        className={clsx(
+          'font-[family-name:var(--font-display)] font-extrabold leading-none tracking-[0.02em] tabular-nums',
+          numberColor
+        )}
+        style={{ fontSize: 'clamp(56px, 11vw, 128px)' }}
+      >
+        {value}
+      </span>
+      <span className="font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[0.22em] text-[var(--color-text-tertiary)] sm:text-[10px]">
         {label}
       </span>
-    </span>
+    </div>
   );
 }
 
