@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+/* ---------- Final Bosu fonts ---------- */
+@font-face {
+  font-family: 'AKIRA Expanded';
+  src: url('/fonts/Akira-Expanded.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cera Pro';
+  src: url('/fonts/CeraPro-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cera Pro';
+  src: url('/fonts/CeraPro-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cera Mono';
+  src: url('/fonts/CeraMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Final Bosu Design System tokens ---------- */
+:root {
+  /* Typography */
+  --font-display: 'AKIRA Expanded', 'Impact', 'Arial Black', sans-serif;
+  --font-body: 'Cera Pro', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Cera Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* Surfaces */
+  --color-bg-page: #00002F;
+  --color-bg-surface: #1A1A44;
+  --color-bg-elevated: #252550;
+
+  /* Borders */
+  --color-border-subtle: #333359;
+  --color-border-default: #4D4D6D;
+
+  /* Text */
+  --color-text-primary: #F3F3F3;
+  --color-text-secondary: #9999AC;
+  --color-text-tertiary: #7A7A9A;
+
+  /* Brand */
+  --color-accent: #E51A4B;
+  --color-accent-hover: #FF4D6D;
+  --color-brand: #E51A4B;
+  --color-brand-yellow: #F0E800;
+  --color-brand-orange: #FF8400;
+  --color-on-brand-orange: #00002F;
+
+  /* Surface tints (Material Design 3 tonal elevation) */
+  --color-surface-tint-1: color-mix(in srgb, #E51A4B 4%, #1A1A44);
+  --color-surface-tint-2: color-mix(in srgb, #E51A4B 7%, #1A1A44);
+  --color-surface-tint-3: color-mix(in srgb, #E51A4B 10%, #1A1A44);
+  --color-surface-tint-4: color-mix(in srgb, #E51A4B 14%, #252550);
+}
+
+html, body {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
