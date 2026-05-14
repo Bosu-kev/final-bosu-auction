@@ -54,7 +54,7 @@ export function AuctionView() {
                 ? 'text-[var(--color-text-tertiary)]'
                 : isLow
                   ? 'text-[var(--color-accent)]'
-                  : 'text-[var(--color-brand-orange)]'
+                  : 'text-[var(--color-accent)]'
             )}
           >
             {ended ? 'Window closed' : isLow ? 'Final hour' : 'Time remaining'}
@@ -100,8 +100,8 @@ function TimeTile({
     tone === 'ended'
       ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface-tint-1)]'
       : tone === 'low'
-        ? 'border-[var(--color-accent)] bg-[var(--color-surface-tint-4)]'
-        : 'border-[var(--color-brand-orange)] bg-[var(--color-surface-tint-3)]';
+        ? 'border-[var(--color-accent)] bg-[var(--color-surface-tint-4)] shadow-[0_18px_60px_-20px_#E51A4B66]'
+        : 'border-[var(--color-border-default)] bg-[var(--color-bg-elevated)]';
   const numberColor =
     tone === 'ended'
       ? 'text-[var(--color-text-secondary)]'
