@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { AUCTION_OFFER_END_ISO, OFFER_ITEMS, type AuctionItem } from './auction-data';
+import type { TopOffer } from '@/lib/offers';
 
 function pad(n: number): string {
   return n.toString().padStart(2, '0');
@@ -17,7 +18,7 @@ function breakdown(secondsRemaining: number) {
   return { h, m, s };
 }
 
-export function AuctionView() {
+export function AuctionView({ topOffers = {} }: { topOffers?: Record<string, TopOffer | null> }) {
   const endMs = new Date(AUCTION_OFFER_END_ISO).getTime();
 
   const [now, setNow] = useState(Date.now());
@@ -74,7 +75,12 @@ export function AuctionView() {
         {/* NFT cards */}
         <section className="grid w-full grid-cols-1 gap-5 sm:grid-cols-3">
           {OFFER_ITEMS.map(item => (
-            <NftCard key={item.id} item={item} ended={ended} />
+            <NftCard
+              key={item.id}
+              item={item}
+              ended={ended}
+              topOffer={item.tokenId ? topOffers[String(item.tokenId)] ?? null : null}
+            />
           ))}
         </section>
 
@@ -130,7 +136,15 @@ function TimeTile({
   );
 }
 
-function NftCard({ item, ended }: { item: AuctionItem; ended: boolean }) {
+function NftCard({
+  item,
+  ended,
+  topOffer,
+}: {
+  item: AuctionItem;
+  ended: boolean;
+  topOffer: TopOffer | null;
+}) {
   const inner = (
     <>
       <div className="absolute left-3 top-3 z-10">
@@ -150,20 +164,41 @@ function NftCard({ item, ended }: { item: AuctionItem; ended: boolean }) {
         <Image src={item.image} alt={item.title} fill className="object-cover" unoptimized />
       </div>
 
-      <div className="flex items-center justify-between gap-3 p-4">
-        <p className="font-[family-name:var(--font-display)] text-[18px] font-extrabold uppercase tracking-[0.04em] text-[var(--color-text-primary)] tabular-nums">
-          #{item.tokenId}
-        </p>
-        {!ended ? (
-          <span className="inline-flex items-center gap-1.5 rounded-[8px] bg-[var(--color-brand-orange)] px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-on-brand-orange)] transition-colors group-hover:bg-[var(--color-brand-yellow)]">
-            Offer
-            <span aria-hidden>↗</span>
-          </span>
-        ) : (
+      <div className="flex flex-col gap-3 p-4">
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-[family-name:var(--font-display)] text-[18px] font-extrabold uppercase tracking-[0.04em] text-[var(--color-text-primary)] tabular-nums">
+            #{item.tokenId}
+          </p>
+          {!ended ? (
+            <span className="inline-flex items-center gap-1.5 rounded-[8px] bg-[var(--color-brand-orange)] px-3 py-2 font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-on-brand-orange)] transition-colors group-hover:bg-[var(--color-brand-yellow)]">
+              Offer
+              <span aria-hidden>↗</span>
+            </span>
+          ) : (
+            <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+              Closed
+            </span>
+          )}
+        </div>
+
+        {/* Current top offer */}
+        <div className="flex items-baseline justify-between gap-2 border-t border-[var(--color-border-subtle)] pt-3">
           <span className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
-            Closed
+            Top offer
           </span>
-        )}
+          {topOffer ? (
+            <span className="font-[family-name:var(--font-display)] text-[18px] font-extrabold tabular-nums text-[var(--color-text-primary)]">
+              Ξ {topOffer.eth.toFixed(3)}
+              <span className="ml-1 font-[family-name:var(--font-mono)] text-[9px] tracking-[0.12em] text-[var(--color-text-tertiary)]">
+                {topOffer.symbol}
+              </span>
+            </span>
+          ) : (
+            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
+              No offers yet
+            </span>
+          )}
+        </div>
       </div>
     </>
   );
